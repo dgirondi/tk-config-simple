@@ -108,7 +108,12 @@ keys:
     grp_name:
         type: str
 
-
+    # key used to specify the Maya extension
+    maya_ext:
+        type: str
+        choices: {'ma':'Maya Ascii (.ma)', 'mb':'Maya Binary (.mb)'}
+        default: 'ma'
+        alias: extension
 
 #
 # The paths section contains all the the key locations where files are to be stored
@@ -215,15 +220,15 @@ paths:
         root_name: 'primary'
     # The location of WIP files
     maya_shot_work:
-        definition: '@shot_root/work/maya/{name}.v{version}.ma'
+        definition: '@shot_root/work/maya/{name}.v{version}.{maya_ext}'
         root_name: 'primary'
     # The location of backups of WIP files
     maya_shot_snapshot:
-        definition: '@shot_root/work/maya/snapshots/{name}.v{version}.{timestamp}.ma'
+        definition: '@shot_root/work/maya/snapshots/{name}.v{version}.{timestamp}.{maya_ext}'
         root_name: 'primary'
     # The location of published maya files
     maya_shot_publish:
-        definition: '@shot_root/publish/maya/{name}.v{version}.ma'
+        definition: '@shot_root/publish/maya/{name}.v{version}.{maya_ext}'
         root_name: 'primary'
     # The location where quickreview quicktimes are stored on disk
     maya_shot_quickreview:
@@ -235,7 +240,7 @@ paths:
         root_name: 'primary'
 
     maya_shot_camera:
-        definition: '@shot_root/publish/maya/camera/{name}.v{version}.ma'
+        definition: '@shot_root/publish/maya/camera/{name}.v{version}.{maya_ext}'
         root_name: 'primary'
 
 
@@ -470,15 +475,15 @@ paths:
         root_name: 'primary'
     # The location of WIP files
     maya_asset_work:
-        definition: '@asset_root/work/maya/{name}.v{version}.ma'
+        definition: '@asset_root/work/maya/{name}.v{version}.{maya_ext}'
         root_name: 'primary'
     # The location of backups of WIP files
     maya_asset_snapshot:
-        definition: '@asset_root/work/maya/snapshots/{name}.v{version}.{timestamp}.ma'
+        definition: '@asset_root/work/maya/snapshots/{name}.v{version}.{timestamp}.{maya_ext}'
         root_name: 'primary'
     # The location of published maya files
     maya_asset_publish:
-        definition: '@asset_root/publish/maya/{name}.v{version}.ma'
+        definition: '@asset_root/publish/maya/{name}.v{version}.{maya_ext}'
         root_name: 'primary'
     # The location where quick reiview quicktimes are stored on disk
     maya_asset_quickreview:
@@ -487,7 +492,7 @@ paths:
 
     # The location where maya shader networks are stored on disk
     maya_asset_shader_network:
-        definition: '@asset_root/publish/maya/surfacing/{name}.v{version}.ma'
+        definition: '@asset_root/publish/maya/surfacing/{name}.v{version}.{maya_ext}'
         root_name: 'primary'
 
     #
