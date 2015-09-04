@@ -141,13 +141,17 @@ class MayaActions(HookBaseClass):
         
         # make a name space out of entity name + publish name
         # e.g. bunny_upperbody                
-        namespace = "%s %s" % (sg_publish_data.get("entity").get("name"), sg_publish_data.get("name"))
-        namespace = namespace.replace(" ", "_")
-                
-        pm.system.createReference(path, 
-                                  loadReferenceDepth= "all", 
-                                  mergeNamespacesOnClash=False, 
-                                  namespace=namespace)
+        # namespace = "%s %s" % (sg_publish_data.get("entity").get("name"), sg_publish_data.get("name"))
+        # namespace = namespace.replace(" ", "_")
+        # namespace = sg_publish_data.get("entity").get("name")
+        nodes = pm.system.createReference(
+            path, 
+            loadReferenceDepth="all", 
+            mergeNamespacesOnClash=False,
+            returnNewNodes=True, 
+            # namespace=namespace,
+        )
+        # cmds.namespace(addNamespace=namespace)
 
     def _do_import(self, path, sg_publish_data):
         """
@@ -160,18 +164,34 @@ class MayaActions(HookBaseClass):
         if not os.path.exists(path):
             raise Exception("File not found on disk - '%s'" % path)
 
+        namespace = ':' + sg_publish_data.get("entity").get("name")
+        cmds.namespace(addNamespace=namespace)
+        cmds.namespace(setNamespace=namespace)
+
         # If we're importing an Alembic cache.
         if os.path.splitext(path)[1].lower() == ".abc":
-            cmds.AbcImport(path)
+            cmds.AbcImport(
+                path,
+                mode='replace',
+                connect='/',
+                createIfNotFound=True,
+            )
             return
                 
         # make a name space out of entity name + publish name
         # e.g. bunny_upperbody                
-        namespace = "%s %s" % (sg_publish_data.get("entity").get("name"), sg_publish_data.get("name"))
-        namespace = namespace.replace(" ", "_")
+        # namespace = "%s %s" % (sg_publish_data.get("entity").get("name"), sg_publish_data.get("name"))
+        # namespace = namespace.replace(" ", "_")
         
         # perform a more or less standard maya import, putting all nodes brought in into a specific namespace
-        cmds.file(path, i=True, renameAll=True, namespace=namespace, loadReferenceDepth="all", preserveReferences=True)
+        cmds.file(
+            path,
+            i=True,
+            renameAll=True,
+            # namespace=namespace,
+            loadReferenceDepth="all",
+            preserveReferences=True,
+        )
             
     def _create_texture_node(self, path, sg_publish_data):
         """
