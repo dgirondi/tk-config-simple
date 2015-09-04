@@ -106,7 +106,7 @@ engines:
         template_work: maya_shot_work
       tk-multi-screeningroom: '@launch_screeningroom'
       tk-multi-setframerange:
-        location: {name: tk-multi-setframerange, type: app_store, version: v0.2.2}
+        location: {name: tk-multi-setframerange, type: app_store, version: v0.2.4}
         sg_in_frame_field: sg_cut_in
         sg_out_frame_field: sg_cut_out
       tk-multi-snapshot:
@@ -140,11 +140,12 @@ engines:
         my_tasks_extra_display_fields: []
         saveas_default_name: scene
         saveas_prefer_version_up: false
-        task_extra_display_fields: []
+        show_my_tasks: true
         template_publish: maya_shot_publish
         template_publish_area: shot_publish_area_maya
         template_work: maya_shot_work
         template_work_area: shot_work_area_maya
+        version_compare_ignore_fields: []
     compatibility_dialog_min_version: 2016
     debug_logging: false
     location: {name: tk-maya, type: app_store, version: v0.5.2}
