@@ -36,7 +36,7 @@ engines:
           Maya Scene: [reference, import]
           Photoshop Image: [texture_node]
           Rendered Image: [texture_node]
-          Alembic Cache: [import]
+          Alembic Cache: [reference, import]
           Camera: [reference, import]
           Maya Shader Network: [reference, import]
         actions_hook: tk-maya_loader_actions_abc
