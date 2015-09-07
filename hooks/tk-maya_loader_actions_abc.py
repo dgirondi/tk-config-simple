@@ -139,8 +139,10 @@ class MayaActions(HookBaseClass):
         if not os.path.exists(path):
             raise Exception("File not found on disk - '%s'" % path)
         
-        pm.system.createReference(
-            path, 
+        cmds.file(
+            path,
+            reference=True,
+            lockReference=True,
             loadReferenceDepth="all",
             namespace=':',
         )
