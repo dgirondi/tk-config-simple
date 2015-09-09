@@ -151,65 +151,64 @@ class PublishHook(Hook):
         :param thumbnail_path:          The path to the publish thumbnail
         :param progress_cb:             A callback that can be used to report progress
         """
-        # determine the publish info to use
-        #
+        # Determine the publish info to use.
         progress_cb(10, "Determining publish details")
 
-        # get the current scene path and extract fields from it
-        # using the work template:
+        # Get the current scene path and extract fields from it
+        # using the work template.
         scene_path = os.path.abspath(cmds.file(query=True, sn=True))
         fields = work_template.get_fields(scene_path)
         publish_version = fields["version"]
+        short_name = cmds.ls(item["name"], shortNames=True)[0]
+        fields["grp_name"] = short_name
         tank_type = output["tank_type"]
                 
-        # create the publish path by applying the fields 
-        # with the publish template:
+        # Create the publish path by applying the fields 
+        # with the publish template.
         publish_template = output["publish_template"]
         publish_path = publish_template.apply_fields(fields)
         
-        # ensure the publish folder exists:
+        # Ensure the publish folder exists.
         publish_folder = os.path.dirname(publish_path)
         self.parent.ensure_folder_exists(publish_folder)
 
-        # determine the publish name:
-        publish_name = fields.get("name")
+        # Determine the publish name.
+        publish_name = fields.get("name") + '_' + short_name
         if not publish_name:
             publish_name = os.path.basename(publish_path)
         
-        # Find additional info from the scene:
-        #
         progress_cb(10, "Analysing scene")
 
-        # set the alembic args that make the most sense when working with Mari.  These flags
+        # Set the alembic args that make the most sense when working with Mari.  These flags
         # will ensure the export of an Alembic file that contains all visible geometry from
         # the current scene together with UV's and face sets for use in Mari.
-        alembic_args = ["-renderableOnly",   # only renderable objects (visible and not templated)
-                        "-writeFaceSets",    # write shading group set assignments (Maya 2015+)
-                        "-uvWrite"           # write uv's (only the current uv set gets written)
-                        ]        
+        alembic_args = [
+            '-renderableOnly',
+            '-writeFaceSets',
+            '-uvWrite',
+            '-file ' + publish_path.replace('\\', '/'),
+            '-selection',
+        ]
 
-        # find the animated frame range to use:
+        # Find the animated frame range to use.
         start_frame, end_frame = self._find_scene_animation_range()
         if start_frame and end_frame:
-            alembic_args.append("-fr %d %d" % (start_frame, end_frame))
+            alembic_args.append('-fr %d %d' % (start_frame, end_frame))
 
-        # Set the output path: 
-        # Note: The AbcExport command expects forward slashes!
-        alembic_args.append("-file %s" % publish_path.replace("\\", "/"))
+        # Select the nodes we're going to export.
+        cmds.select(item['name'], hierarchy=True)
 
-        # build the export command.  Note, use AbcExport -help in Maya for
-        # more detailed Alembic export help
+        # Build the export command.  Note, use AbcExport -help in Maya for
+        # more detailed Alembic export help.
         abc_export_cmd = ("AbcExport -j \"%s\"" % " ".join(alembic_args))
-
-        # ...and execute it:
         progress_cb(30, "Exporting Alembic cache")
         try:
             self.parent.log_debug("Executing command: %s" % abc_export_cmd)
-            mel.eval(abc_export_cmd)
-        except Exception, e:
+            cmds.AbcExport(j=' '.join(alembic_args))
+        except Exception as e:
             raise TankError("Failed to export Alembic Cache: %s" % e)
 
-        # register the publish:
+        # Register the publish.
         progress_cb(75, "Registering the publish")        
         args = {
             "tk": self.parent.tank,
