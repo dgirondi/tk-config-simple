@@ -11,6 +11,8 @@
 """
 Hook that loads defines all the available actions, broken down by publish type. 
 """
+
+import re
 import sgtk
 import os
 import pymel.core as pm
@@ -139,13 +141,17 @@ class MayaActions(HookBaseClass):
         if not os.path.exists(path):
             raise Exception("File not found on disk - '%s'" % path)
         
-        cmds.file(
+        nodes = cmds.file(
             path,
             reference=True,
             lockReference=True,
             loadReferenceDepth="all",
             namespace=':',
+            returnNewNodes=True,
         )
+
+        reference_node = cmds.referenceQuery(path, referenceNode=True)
+        _hookup_shaders(reference_node)
 
     def _do_import(self, path, sg_publish_data):
         """
@@ -215,3 +221,30 @@ class MayaActions(HookBaseClass):
                 self._maya_major_version = int(major_version_number_str)
         return self._maya_major_version
         
+def _hookup_shaders(reference_node):
+    
+    hookup_prefix = "SHADER_HOOKUP_"
+    shader_hookups = {}
+    for node in cmds.ls(type="script"):
+        if not node.startswith(hookup_prefix):
+            continue
+        obj_pattern = node.replace(hookup_prefix, "") + "\d*"
+        obj_pattern = "^" + obj_pattern + "$"
+        shader = cmds.scriptNode(node, query=True, beforeScript=True)
+        shader_hookups[obj_pattern] = shader
+        
+    for node in cmds.referenceQuery(reference_node, nodes=True):
+        for (obj_pattern, shader) in shader_hookups.iteritems():
+            if re.match(obj_pattern, node, re.IGNORECASE):
+                # assign the shader to the object
+                cmds.file(unloadReference=reference_node, force=True)
+                cmds.setAttr(reference_node + ".locked", False)
+                cmds.file(loadReference=reference_node)
+                cmds.select(node, replace=True)
+                cmds.hyperShade(assign=shader)
+                cmds.file(unloadReference=reference_node)
+                cmds.setAttr(reference_node + ".locked", True)
+                cmds.file(loadReference=reference_node)
+            else:
+                print "NODE: " + node + " doesn't match " + obj_pattern
+                

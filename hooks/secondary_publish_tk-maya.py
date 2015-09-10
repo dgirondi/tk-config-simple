@@ -319,9 +319,9 @@ class PublishHook(Hook):
         fields = work_template.get_fields(scene_path)
         publish_version = fields["version"]
         tank_type = output["tank_type"]
-        shader_name = item['name']
-        fields['obj_name'] = shader_name
-        fields['name'] = re.sub(r'[\W_]+', '', shader_name)
+        obj_name = item['name']
+        fields['obj_name'] = obj_name
+        fields['name'] = re.sub(r'[\W_]+', '', obj_name)
 
         # create the publish path by applying the fields 
         # with the publish template:
@@ -341,31 +341,64 @@ class PublishHook(Hook):
         #
         progress_cb(10, "Analysing scene")
 
+        # clean up any hookup nodes that existed before
+        _clean_shader_hookup_script_nodes()
+
         # there's probably a better way to do this. i am jon snow (i know
         # nothing)
         shading_groups = set()
-        if cmds.ls(shader_name, dag=True, type="mesh"):
-            faces = cmds.polyListComponentConversion(shader_name, toFace=True)
+        shad_group_to_obj = {}
+        if cmds.ls(obj_name, dag=True, type="mesh"):
+            faces = cmds.polyListComponentConversion(obj_name, toFace=True)
             for shading_group in cmds.listSets(type=1, object=faces[0]):
                 shading_groups.add(shading_group)
+                shad_group_to_obj[shading_group] = obj_name
 
         shaders = set()
-        for shading_group in shading_groups:
+        script_nodes = []
+        for shading_group in list(shading_groups):
             connections = cmds.listConnections(
                 shading_group, source=True, destination=False)
             for shader in cmds.ls(connections, materials=True):
                 shaders.add(shader)        
+                obj_name = shad_group_to_obj[shading_group]
+
+                # can't seem to store arbitrary data in maya in any
+                # reasonable way. would love to know a better way to 
+                # do this. for now, just create a script node that 
+                # we can easily find and deduce an object name and
+                # shader name. Yes, this is hacky.
+                script_node = cmds.scriptNode(
+                    name="SHADER_HOOKUP_" + obj_name,
+                    scriptType=0, # execute on demand.
+                    beforeScript=shader,
+                )
+                script_nodes.append(script_node)
 
         if not shaders:
             progress_cb(100, "No shader networks to export.")        
             return
 
-        cmds.select(list(shaders), replace=True)
+        select_nodes = list(shaders)
+        #select_nodes.extend(list(shading_groups))
+        select_nodes.extend(script_nodes)
+
+        cmds.select(select_nodes, replace=True)
 
         # write a .ma file to the publish path with the shader network definitions
         progress_cb(25, "Exporting the shader network.")        
-        cmds.file(publish_path, type='mayaAscii', exportSelected=True,
-            options="v=0", prompt=False, force=True)
+        cmds.file(
+            publish_path,
+            type='mayaAscii',
+            exportSelected=True,
+            options="v=0",
+            prompt=False,
+            force=True
+        )
+
+        # clean up shader hookup nodes. they should exist in the publish file
+        # only.
+        _clean_shader_hookup_script_nodes()
 
         # register the publish:
         progress_cb(75, "Registering the publish")        
@@ -402,4 +435,14 @@ class PublishHook(Hook):
         end = int(cmds.playbackOptions(q=True, max=True))        
         
         return (start, end)
+
+
+def _clean_shader_hookup_script_nodes():
+
+    # clean up any existing shader hookup nodes
+    hookup_prefix = "SHADER_HOOKUP_"
+    shader_hookups = {}
+    for node in cmds.ls(type="script"):
+        if node.startswith(hookup_prefix):
+            cmds.delete(node)
 
