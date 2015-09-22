@@ -37,7 +37,7 @@ engines:
           Photoshop Image: [texture_node]
           Rendered Image: [texture_node]
           UDIM Image: [udim_texture_node]
-        actions_hook: tk-maya_loader_actions_abc
+        actions_hook: "{tk-framework-simple}/maya/loader_actions_abc.py"
         download_thumbnails: true
         entities:
         - caption: Assets
@@ -68,10 +68,10 @@ engines:
         hook_copy_file: default
         hook_post_publish: default
         hook_primary_pre_publish: default
-        hook_primary_publish: primary_publish
-        hook_scan_scene: scan_scene_tk-maya_shader_networks
-        hook_secondary_pre_publish: secondary_pre_publish_tk-maya
-        hook_secondary_publish: secondary_publish_tk-maya
+        hook_primary_publish: "{tk-framework-simple}/maya/primary_publish.py"
+        hook_scan_scene: "{tk-framework-simple}/maya/scan_scene_shader_networks.py"
+        hook_secondary_pre_publish: "{tk-framework-simple}/maya/secondary_pre_publish.py"
+        hook_secondary_publish: "{tk-framework-simple}/maya/secondary_publish.py"
         hook_thumbnail: default
         location: {name: tk-multi-publish, type: app_store, version: v0.6.2}
         primary_description: Publish and version up the current Maya scene
@@ -269,7 +269,7 @@ engines:
         height: 768
         location: {name: tk-nuke-quickdailies, type: app_store, version: v0.1.8}
         movie_template: asset_quicktime_quick
-        post_hooks: [snapshot_history_post_quickdaily]
+        post_hooks: ["{tk-framework-simple}/snapshot_history_post_quickdaily.py"]
         sg_version_name_template: nuke_quick_asset_version_name
         width: 1024
       tk-nuke-writenode:
@@ -411,3 +411,6 @@ frameworks:
     location: {name: tk-framework-widget, type: app_store, version: v0.1.19}
   tk-framework-widget_v0.1.22:
     location: {name: tk-framework-widget, type: app_store, version: v0.1.22}
+  tk-framework-simple:
+    location: {name: tk-framework-simple, type: git, path: "https://github.com/shotgunsoftware/tk-framework-simple.git", version: v0.0.1}
+
