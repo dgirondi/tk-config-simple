@@ -12,19 +12,21 @@
 # included configurations
 # -----------------------------------------------------------------------------
 includes:
-    - ./includes/work_area.yml
+  - ./dcc_launchers.yml
 
-# asset work area overrides
+
+# default shotgun settings
 # -----------------------------------------------------------------------------
+
 engines:
 
-  tk-maya:
-
-    # app overrides
+  tk-shotgun:
     apps:
-      tk-maya-quickreview:
-        quicktime_template: maya_asset_quickreview
-
-    # engine setting overrides
-    template_project: asset_work_area_maya
-
+      tk-multi-launchmaya: '@launch_maya'
+      tk-shotgun-launchfolder:
+        deny_permissions: []
+        deny_platforms: []
+        location: {name: tk-shotgun-launchfolder, type: app_store, version: v0.1.5}
+    debug_logging: false
+    location: {name: tk-shotgun, type: app_store, version: v0.5.1}
+    

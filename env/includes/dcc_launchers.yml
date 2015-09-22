@@ -11,20 +11,26 @@
 
 # included configurations
 # -----------------------------------------------------------------------------
+
 includes:
-    - ./includes/work_area.yml
+    - ./paths.yml
 
-# asset work area overrides
+# launcher configurations
 # -----------------------------------------------------------------------------
-engines:
-
-  tk-maya:
-
-    # app overrides
-    apps:
-      tk-maya-quickreview:
-        quicktime_template: maya_asset_quickreview
-
-    # engine setting overrides
-    template_project: asset_work_area_maya
+launch_maya:
+  defer_keyword: ''
+  engine: tk-maya
+  extra: {}
+  hook_app_launch: default
+  hook_before_app_launch: default
+  icon: '{target_engine}/icon_256.png'
+  linux_args: ''
+  linux_path: '@maya_linux'
+  location: {name: tk-multi-launchapp, type: app_store, version: v0.6.6}
+  mac_args: ''
+  mac_path: '@maya_mac'
+  menu_name: Launch Maya
+  versions: []
+  windows_args: ''
+  windows_path: '@maya_windows'
 

@@ -12,19 +12,18 @@
 # included configurations
 # -----------------------------------------------------------------------------
 includes:
-    - ./includes/work_area.yml
+    - ./frameworks.yml
+    - ./dcc_launchers.yml
+    - ./desktop.yml
+    - ./maya.yml
+    - ./shell.yml
 
-# asset work area overrides
+# default maya configuration
 # -----------------------------------------------------------------------------
 engines:
 
   tk-maya:
-
-    # app overrides
     apps:
       tk-maya-quickreview:
-        quicktime_template: maya_asset_quickreview
-
-    # engine setting overrides
-    template_project: asset_work_area_maya
+        location: {"type": "git", "path": "https://github.com/josh-t/tk-maya-quickreview.git", "version": "0.1.0"}
 
