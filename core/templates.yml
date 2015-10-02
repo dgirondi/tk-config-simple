@@ -115,7 +115,12 @@ keys:
         default: 'ma'
         alias: extension
 
-#
+    # reserve a template key for the maya camera name and render layer name
+    maya.camera_name:
+        type: str
+    maya.layer_name:
+        type: str
+
 # The paths section contains all the the key locations where files are to be stored
 # by Sgtk Apps. Each path is made up of several keys (like {version} or {shot}) and
 # these are defined in the keys section above.
@@ -243,6 +248,16 @@ paths:
         definition: '@shot_root/publish/maya/camera/{name}.v{version}.{maya_ext}'
         root_name: 'primary'
 
+    # this is the template path for your rendered images. For this example,
+    # I've inserted the camera and layer names into the directory structure. 
+    # You could also make them part of the file name or both. The version comes 
+    # from the version of the work file you're publishing from. The name is 
+    # currently the same as the layer name, but you could make it whatever 
+    # you want in the scan hook. The SEQ key is a placeholder for the frame 
+    # numbers. This template represents all frames in the sequence.
+    maya_shot_render:
+        definition: '@shot_root/work/images/{maya.camera_name}/{maya.layer_name}/v{version}/{name}.{SEQ}.exr'
+        root_name: 'primary'
 
     #
     # Houdini

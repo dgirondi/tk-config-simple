@@ -103,6 +103,23 @@ engines:
           scene_item_type: mesh_group
           selected: false
           tank_type: 'Alembic Cache'
+        # this is the block that tells the publish app that you want to 
+        # create a secondary render type called 'Rendered Image' - which
+        # is what nuke looks for by default. I'm using the nuke writenode
+        # icon for now since it was available in the default config. 
+        # You can see the 'publish_template' is using the maya_shot_render
+        # template that we created in templates.yml. This tells the publish
+        # hook to use that evaluated path as the path to record in shotgun.
+        - description: 'Publish a rendered image sequence'
+          display_group: Renders
+          display_name: Rendered 
+          icon: 'icons/publish_nuke_writenode.png'
+          name: rendered_image
+          publish_template: maya_shot_render
+          required: false
+          scene_item_type: rendered_image
+          selected: false
+          tank_type: 'Rendered Image'
         template_work: maya_shot_work
       tk-multi-screeningroom: '@launch_screeningroom'
       tk-multi-setframerange:
@@ -336,6 +353,8 @@ frameworks:
     location: {name: tk-framework-widget, type: app_store, version: v0.1.19}
   tk-framework-widget_v0.1.22:
     location: {name: tk-framework-widget, type: app_store, version: v0.1.22}
+
+  # pointing to the branch with the maya render publish code
   tk-framework-simple_v0.x.x:
-    location: {name: tk-framework-simple, type: git, path: "https://github.com/shotgunsoftware/tk-framework-simple.git", version: v0.0.1}
+    location: {name: tk-framework-simple, type: git, path: "https://github.com/shotgunsoftware/tk-framework-simple.git", version: "pub_maya_renders"}
 
