@@ -292,6 +292,13 @@ paths:
         definition: '@shot_root/work/images/{name}/v{version}/{width}x{height}/{Shot}_{name}_v{version}.{SEQ}.exr'
         root_name: 'primary'
 
+    #
+    # Manifests
+    #
+
+    publish_group_manifest:
+        definition: '@shot_root/publish/manifests/{name}.v{version}.json'
+        root_name: 'primary'
 
     #
     # 3dsmax
