@@ -37,6 +37,7 @@ engines:
           Photoshop Image: [texture_node]
           Rendered Image: [texture_node]
           UDIM Image: [udim_texture_node]
+          group: [reference, import]
         actions_hook: "{tk-framework-simple_v0.x.x}/maya/loader_actions_abc.py"
         download_thumbnails: true
         entities:
@@ -92,6 +93,8 @@ engines:
           required: false
           scene_item_type: geometry
           selected: false
+          publish_group: true
+          group_name: 'Alembic Caches'
           tank_type: Alembic Cache
         - description: Publish shader network for all geometry in the scene
           display_group: Shader Network
@@ -102,6 +105,8 @@ engines:
           required: false
           scene_item_type: shader_network
           selected: false
+          publish_group: false
+          group_name: default
           tank_type: 'Maya Shader Network'
         template_work: maya_asset_work
       tk-multi-screeningroom: '@launch_screeningroom'

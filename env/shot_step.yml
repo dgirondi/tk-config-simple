@@ -39,6 +39,7 @@ engines:
           Alembic Cache: [reference, import]
           Camera: [reference, import]
           Maya Shader Network: [reference, import]
+          group: [reference, import]
         actions_hook: "{tk-framework-simple_v0.x.x}/maya/loader_actions_abc.py"
         download_thumbnails: true
         entities:
@@ -70,14 +71,15 @@ engines:
         display_name: Publish
         expand_single_items: false
         hook_copy_file: default
-        hook_post_publish: default
+        hook_post_publish: "{tk-framework-simple_v0.x.x}/maya/post_publish.py"
         hook_primary_pre_publish: default
         hook_primary_publish: "{tk-framework-simple_v0.x.x}/maya/primary_publish.py"
         hook_scan_scene: "{tk-framework-simple_v0.x.x}/maya/scan_scene.py"
         hook_secondary_pre_publish: "{tk-framework-simple_v0.x.x}/maya/secondary_pre_publish.py"
         hook_secondary_publish: "{tk-framework-simple_v0.x.x}/maya/secondary_publish.py"
         hook_thumbnail: default
-        location: {name: tk-multi-publish, type: app_store, version: v0.6.10}
+        # TODO: update this to release in tk-multi-publish fork
+        location: {name: tk-multi-publish, type: dev, path: "/Users/jeff/Documents/repositories/forks/tk-multi-publish"}
         primary_description: Publish and version up the current Maya scene
         primary_display_name: Maya Publish
         primary_icon: icons/publish_maya_main.png
@@ -94,6 +96,8 @@ engines:
           required: false
           scene_item_type: camera
           selected: false
+          publish_group: false
+          group_name: default
           tank_type: 'Camera'
         - description: 'Publish Alembic Cache data for the model'
           display_group: Caches
@@ -104,7 +108,26 @@ engines:
           required: false
           scene_item_type: mesh_group
           selected: false
+          publish_group: true
+          group_name: 'Alembic Caches'
           tank_type: 'Alembic Cache'
+        # this is the block that tells the publish app that you want to 
+        # create a secondary render type called 'Rendered Image' - which
+        # is what nuke looks for by default. I'm using the nuke writenode
+        # icon for now since it was available in the default config. 
+        # You can see the 'publish_template' is using the maya_shot_render
+        # template that we created in templates.yml. This tells the publish
+        # hook to use that evaluated path as the path to record in shotgun.
+        - description: 'Publish a rendered image sequence'
+          display_group: Renders
+          display_name: Rendered 
+          icon: 'icons/publish_nuke_writenode.png'
+          name: rendered_image
+          publish_template: maya_shot_render
+          required: false
+          scene_item_type: rendered_image
+          selected: false
+          tank_type: 'Rendered Image'
         template_work: maya_shot_work
       tk-multi-screeningroom: '@launch_screeningroom'
       tk-multi-setframerange:
@@ -340,6 +363,8 @@ frameworks:
     location: {name: tk-framework-widget, type: app_store, version: v0.1.19}
   tk-framework-widget_v0.1.22:
     location: {name: tk-framework-widget, type: app_store, version: v0.1.22}
+
+  # pointing to the branch with the maya render publish code
   tk-framework-simple_v0.x.x:
-    location: {name: tk-framework-simple, type: git, path: "https://github.com/shotgunsoftware/tk-framework-simple.git", version: v0.0.3}
+    location: {name: tk-framework-simple, type: git, path: "https://github.com/shotgunsoftware/tk-framework-simple.git", version: "v0.0.3"}
 
