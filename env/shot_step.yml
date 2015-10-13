@@ -78,6 +78,7 @@ engines:
         hook_secondary_pre_publish: "{tk-framework-simple_v0.x.x}/maya/secondary_pre_publish.py"
         hook_secondary_publish: "{tk-framework-simple_v0.x.x}/maya/secondary_publish.py"
         hook_thumbnail: default
+        # TODO: update this to release in tk-multi-publish fork
         location: {name: tk-multi-publish, type: dev, path: "/Users/jeff/Documents/repositories/forks/tk-multi-publish"}
         primary_description: Publish and version up the current Maya scene
         primary_display_name: Maya Publish
@@ -365,5 +366,5 @@ frameworks:
 
   # pointing to the branch with the maya render publish code
   tk-framework-simple_v0.x.x:
-    location: {name: tk-framework-simple, type: git, path: "https://github.com/shotgunsoftware/tk-framework-simple.git", version: "pub_maya_renders"}
+    location: {name: tk-framework-simple, type: git, path: "https://github.com/shotgunsoftware/tk-framework-simple.git", version: "v0.0.3"}
 
