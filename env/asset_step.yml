@@ -57,11 +57,13 @@ engines:
           - [task_assignees, is, '{context.user}']
           - [project, is, '{context.project}']
           hierarchy: [entity, content]
-        filter_publishes_hook: '{self}/filter_publishes.py'
-        location: {name: tk-multi-loader2, type: app_store, version: v1.7.1}
+        filter_publishes_hook: '{tk-framework-simple_v0.x.x}/filter_out_deprecated.py'
+        location: {path: 'https://github.com/jesseemond-adsk/tk-multi-loader2.git',
+          type: git, version: v1.7.4}
         menu_name: Load
         publish_filters: []
         title_name: Loader
+        disable_deprecated_files_actions: false
       tk-multi-publish:
         allow_taskless_publishes: true
         display_name: Publish
@@ -408,6 +410,8 @@ engines:
 frameworks:
   tk-framework-shotgunutils_v1.x.x:
     location: {name: tk-framework-shotgunutils, type: app_store, version: v1.0.10}
+  tk-framework-shotgunutils_v2.x.x:
+    location: {name: tk-framework-shotgunutils, type: app_store, version: v2.4.2}
   tk-framework-widget_v0.1.16:
     location: {name: tk-framework-widget, type: app_store, version: v0.1.16}
   tk-framework-widget_v0.1.18:
@@ -417,5 +421,4 @@ frameworks:
   tk-framework-widget_v0.1.22:
     location: {name: tk-framework-widget, type: app_store, version: v0.1.22}
   tk-framework-simple_v0.x.x:
-    location: {name: tk-framework-simple, type: git, path: "https://github.com/shotgunsoftware/tk-framework-simple.git", version: v0.0.1}
-
+    location: {name: tk-framework-simple, type: git, path: "https://github.com/shotgunsoftware/tk-framework-simple.git", version: v0.0.2}
