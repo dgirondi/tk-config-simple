@@ -78,8 +78,7 @@ engines:
         hook_secondary_pre_publish: "{tk-framework-simple_v0.x.x}/maya/secondary_pre_publish.py"
         hook_secondary_publish: "{tk-framework-simple_v0.x.x}/maya/secondary_publish.py"
         hook_thumbnail: default
-        # TODO: update this to release in tk-multi-publish fork
-        location: {name: tk-multi-publish, type: dev, path: "/Users/jeff/Documents/repositories/forks/tk-multi-publish"}
+        location: {name: tk-multi-publish, type: dev, path: "/Users/josh/dev/sg/tk-multi-pub_jbeeland"}
         primary_description: Publish and version up the current Maya scene
         primary_display_name: Maya Publish
         primary_icon: icons/publish_maya_main.png
@@ -127,6 +126,8 @@ engines:
           required: false
           scene_item_type: rendered_image
           selected: false
+          publish_group: false
+          group_name: default
           tank_type: 'Rendered Image'
         template_work: maya_shot_work
       tk-multi-screeningroom: '@launch_screeningroom'
